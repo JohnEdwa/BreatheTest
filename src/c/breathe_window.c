@@ -9,6 +9,11 @@
 #define D_START_DELAY 2100
 #define D_START_ANIMATION_TIME 5000
 #define D_BREATH_HOLD_TIME 1000
+#define D_CIRCLE_ANIMATION_DURATION 1500
+#define D_CIRCLE_ANIMATION_DELAY 150
+#define D_START_ANIMATION_DURATION 2000
+#define D_START_ANIMATION_DELAY 0
+
 #define D_END_ANIMATION_DURATION 2000
 #define D_END_ANIMATION_DELAY 2500
 
@@ -126,7 +131,7 @@ static void circle_animation_setup() {
 		.update = radius_expand_update
 	};
 	// Starts animation: duration 1500, delay 250, curve, implementation
-	create_animation(1500, 250, AnimationCurveEaseInOut, &s_circle_impl);
+	create_animation(D_CIRCLE_ANIMATION_DURATION, D_CIRCLE_ANIMATION_DELAY, AnimationCurveEaseInOut, &s_circle_impl);
 }
 
 // First in animation after pressing select button
@@ -135,7 +140,7 @@ static void main_animation_start() {
 		.update = radius_contract_update
 	};
 	// Starts animation: duration 2000, delay 0, curve, implementation
-	create_animation(2000, 0, AnimationCurveEaseInOut, &s_main_animation_start);
+	create_animation(D_START_ANIMATION_DURATION, D_START_ANIMATION_DELAY, AnimationCurveEaseInOut, &s_main_animation_start);
 }
 
 // Hides lower text
@@ -213,8 +218,8 @@ static void main_animation_end(void *data) {
 	
 	if (complete == 0) {
 		// Sets duration of animation
-		animation_duration = 2000;
-		animation_delay = 2500;
+		animation_duration = D_END_ANIMATION_DURATION;
+		animation_delay = D_END_ANIMATION_DELAY;
 		animation_curve = AnimationCurveEaseInOut;
 		
 		if (settings_get_vibrationEnabled()) {
@@ -254,7 +259,7 @@ static void main_animation() {
 	Animation *circle_expand = animation_create();
 	animation_set_duration(circle_expand, s_breath_duration);
 	animation_set_curve(circle_expand, AnimationCurveEaseInOut);
-	animation_set_delay(circle_expand, 1000);
+	animation_set_delay(circle_expand, D_BREATH_HOLD_TIME);
 	static AnimationImplementation s_expand_impl = {
 		.update = radius_expand_update
 	};
@@ -263,7 +268,7 @@ static void main_animation() {
 	// Circle contracts for 3 seconds and delays for 1 second
 	Animation *circle_contract = animation_create();
 	animation_set_duration(circle_contract, s_breath_duration);
-	animation_set_delay(circle_contract, 1000);
+	animation_set_delay(circle_contract, D_BREATH_HOLD_TIME);
 	animation_set_curve(circle_contract, AnimationCurveEaseInOut);
 	static AnimationImplementation s_contract_impl = {
 		.update = radius_contract_update
@@ -571,7 +576,7 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 		main_animation_end((void*)1);
 		s_interrupt_timer = app_timer_register(525, animation_end_callback, (void*)1);
 		s_animating = false;
-		s_main_done = false;
+		s_main_done = true;
 	} else {
 		window_stack_pop_all(true);
 	}
