@@ -3,7 +3,7 @@
 
 static void health_handler(HealthEventType event, void *context) {
 	if (event == HealthEventHeartRateUpdate) { // New heart rate measurement
-		data_set_current_heart_rate((int)health_service_peek_current_value(HealthMetricHeartRateBPM));
+		data_set_current_heart_rate((int)health_service_peek_current_value(HealthMetricHeartRateRawBPM)); // use RawBPM
 		data_update_heart_rate_buffer();
 	} else if (event == HealthEventMovementUpdate) { // New step count measurement
 		data_set_current_steps((int)health_service_sum_today(HealthMetricStepCount));
