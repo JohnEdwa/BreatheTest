@@ -13,7 +13,6 @@
 #define D_CIRCLE_ANIMATION_DELAY 150
 #define D_START_ANIMATION_DURATION 2000
 #define D_START_ANIMATION_DELAY 0
-
 #define D_END_ANIMATION_DURATION 2000
 #define D_END_ANIMATION_DELAY 2500
 
@@ -391,8 +390,12 @@ static void main_animation() {
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback() {
 	
-	// Update the breathDuration if in variable HR mode
-	if (settings_get_heartRateVariation())	s_breath_duration = settings_get_breathDuration();
+	// Update the breathDuration if in variable HR mode,but only if it's higher.
+	if (settings_get_heartRateVariation()) {
+		int newDuration = settings_get_breathDuration();
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, newDuration);
+		if (newDuration > s_breath_duration) s_breath_duration = newDuration;		
+	}
 	
 	//if (s_times_played < s_breaths_per_minute * s_min_to_breathe && s_animating) { // That means that the time hasn't elapsed and the animations are still going on
 	if (s_animating && !s_main_done) {
