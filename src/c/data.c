@@ -59,6 +59,12 @@ void data_set_current_heart_rate(int value) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Raw BPM: %d, avg BPM: %d", value, (int)s_current_heart_rate);
 }
 
+void data_set_heart_rate_period(int val){
+	#if PBL_API_EXISTS(health_service_set_heart_rate_sample_period)
+		health_service_set_heart_rate_sample_period(val); // Sets heart rate sample period to 5 seconds to get fresh data
+	#endif
+}
+
 char* data_get_current_steps_buffer() {
   return s_current_steps_buffer;
 }

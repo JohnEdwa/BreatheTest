@@ -201,6 +201,9 @@ static void animation_end_callback(void *data) {
 	layer_set_hidden(s_inside_text_layer, false);
 	layer_set_hidden(s_upper_text_layer, false);
 	layer_set_hidden(s_lower_text_layer, false);
+	
+	// restore the HR sample period
+	if (settings_get_heartRateVariation()) data_set_heart_rate_period(0);
 }
 
 // Last out animation
@@ -550,6 +553,9 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
+	// restore the HR sample period
+		if (settings_get_heartRateVariation()) data_set_heart_rate_period(0);
+	
 	if (s_animating) {
 		// Prevents any further animations
 		animation_unschedule_all();
@@ -579,7 +585,7 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 		main_animation_end((void*)1);
 		s_interrupt_timer = app_timer_register(525, animation_end_callback, (void*)1);
 		s_animating = false;
-		s_main_done = true;
+		s_main_done = true;	
 	} else {
 		window_stack_pop_all(true);
 	}
@@ -595,11 +601,14 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		s_breath_duration = settings_get_breathDuration();
 		s_animation_completed = false;
 		
+		// kick the HR to high gear
+		if (settings_get_heartRateVariation()) data_set_heart_rate_period(1);
+		
 		// Hides all text layers
 		layer_set_hidden(s_inside_text_layer, true);
 		layer_set_hidden(s_upper_text_layer, true);
 		layer_set_hidden(s_lower_text_layer, true);
-		
+
 		// Starts the first circle contraction
 		main_animation_start();
 		
