@@ -1,0 +1,62 @@
+{
+    "author": "cheeseisdisgusting@gmail.com",
+    "dependencies": {
+        "pebble-clay": "^1.0.4"
+    },
+    "keywords": [],
+    "name": "breathe",
+    "pebble": {
+        "capabilities": [
+            "configurable",
+            "health"
+        ],
+        "displayName": "Breathe",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "backgroundColor",
+            "circleColor",
+            "vibrationEnabled",
+            "reminderHours",
+            "reminderHoursStart",
+            "rememberDuration",
+            "breathsPerMinute",
+            "vibrationType",
+            "displayText",
+            "heartRateVariation",
+            "appGlanceEnabled",
+            "appGlanceType"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "icon",
+                    "storageFormat": "png",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "data/clock_sequence.pdc",
+                    "name": "CLOCK_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk",
+            "diorite",
+            "emery"
+        ],
+        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.2.0"
+}
