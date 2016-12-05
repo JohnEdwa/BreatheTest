@@ -18,6 +18,8 @@ static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25],
 static time_t t;
 static time_t s_start_stamp;
 
+static AppTimer *s_update_hr_timer;
+
 // ******************************************************************************************* Layer Update Procedures
 // Updates circle
 static void canvas_update_proc(Layer *s_drawing_layer, GContext *ctx) {
@@ -329,6 +331,18 @@ static void main_animation_callback () {
 	}
 }
 
+// Update HeartRate in the top slot during a session
+static void heartrate_update_callback(void *context) {
+	if (s_animating) {
+		data_update_heart_rate_buffer();
+		snprintf(s_greet_text, sizeof(s_greet_text), data_get_current_heart_rate_buffer());
+		layer_set_hidden(s_upper_text_layer, false);
+		
+		// Re-schedule the timer
+			s_update_hr_timer = app_timer_register(s_breath_duration, heartrate_update_callback, NULL);
+	}	
+}
+
 // Shows instructions to inhale
 static void first_breath_in_callback(void *context) {
 	snprintf(s_greet_text, sizeof(s_greet_text), localize_get_inhale_text());
@@ -343,6 +357,9 @@ static void first_breath_out_callback(void *context) {
 	snprintf(s_min_today, sizeof(s_min_today), localize_get_exhale_text());
 	layer_set_hidden(s_upper_text_layer, true);
 	layer_set_hidden(s_lower_text_layer, false);
+	
+	// Start HR update timer
+		if (settings_get_heartRateVariation()) s_update_hr_timer = app_timer_register(s_breath_duration, heartrate_update_callback, NULL);
 }
 
 // Start animation show text
